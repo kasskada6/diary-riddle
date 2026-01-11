@@ -56,4 +56,53 @@
 
   <h1>Дневник Тома Рэддла</h1>
 
-  <div id=
+  <div id="output">Дневник ждёт твоего вопроса…</div>
+
+  <textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
+  <button id="askBtn">Спросить</button>
+
+  <script>
+    const replies = [
+      "Я знаю, что ты думаешь…",
+      "Не всё, что ищешь, стоит знать.",
+      "Тьма питается твоим любопытством.",
+      "Продолжай.",
+      "Вглядись внимательнее…",
+      "Я здесь.",
+    ];
+
+    const output = document.getElementById("output");
+    const input = document.getElementById("input");
+    const button = document.getElementById("askBtn");
+
+    function typeWriter(text, callback) {
+      output.innerHTML = "";
+      let i = 0;
+      const interval = setInterval(() => {
+        output.innerHTML += text.charAt(i);
+        i++;
+        if (i >= text.length) {
+          clearInterval(interval);
+          if (callback) callback();
+        }
+      }, 50);
+    }
+
+    button.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (!text) return;
+
+      button.disabled = true;
+      output.innerHTML = "…дневник думает…";
+
+      setTimeout(() => {
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+        typeWriter(reply, () => {
+          button.disabled = false;
+        });
+      }, 800);
+    });
+  </script>
+
+</body>
+</html>
