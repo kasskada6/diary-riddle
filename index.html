@@ -5,15 +5,17 @@
   <title>Дневник Тома Рэддла</title>
   <style>
     body {
-      background: black;
+      background-color: black;
       color: #cfcfcf;
       font-family: "Courier New", monospace;
       margin: 0;
       padding: 20px;
     }
+
     h1 {
       text-align: center;
     }
+
     #output {
       min-height: 150px;
       border: 1px solid #444;
@@ -21,28 +23,32 @@
       margin-bottom: 10px;
       white-space: pre-wrap;
     }
-    textarea {
+
+    #input {
       width: 100%;
       height: 60px;
-      background: black;
+      background-color: black;
       color: #cfcfcf;
       border: 1px solid #444;
       padding: 8px;
       font-family: inherit;
       font-size: 16px;
+      resize: none;
     }
+
     button {
       width: 100%;
       padding: 12px;
-      background: #222;
+      background-color: #222;
       border: none;
       color: #cfcfcf;
       font-size: 18px;
       cursor: pointer;
       margin-top: 8px;
     }
+
     button:hover {
-      background: #333;
+      background-color: #333;
     }
   </style>
 </head>
@@ -50,10 +56,10 @@
 
   <h1>Дневник Тома Рэддла</h1>
 
-  <div id="output"></div>
+  <div id="output">Дневник ждёт твоего вопроса…</div>
 
   <textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
-  <button onclick="answer()">Спросить</button>
+  <button id="askBtn">Спросить</button>
 
   <script>
     const replies = [
@@ -65,39 +71,37 @@
       "Я здесь.",
     ];
 
-    function answer() {
-      const out = document.getElementById("output");
-      const text = document.getElementById("input").value.trim();
-      if (text === "") return;
+    const output = document.getElementById("output");
+    const input = document.getElementById("input");
+    const button = document.getElementById("askBtn");
 
-      // отключаем кнопку, чтобы не спамить
-      const btn = document.querySelector("button");
-      btn.disabled = true;
-
-      // показываем эффект "думает"
-      out.innerHTML = "…дневник думает…";
-
-      setTimeout(() => {
-        const reply = replies[Math.floor(Math.random() * replies.length)];
-        out.innerHTML = ""; // очищаем
-        typeWriter(out, reply, () => {
-          btn.disabled = false;
-        });
-      }, 800);
-    }
-
-    function typeWriter(element, text, callback) {
+    function typeWriter(text, callback) {
+      output.innerHTML = "";
       let i = 0;
-      const speed = 50; // скорость печати (мс)
       const interval = setInterval(() => {
-        element.innerHTML += text.charAt(i);
+        output.innerHTML += text.charAt(i);
         i++;
         if (i >= text.length) {
           clearInterval(interval);
           if (callback) callback();
         }
-      }, speed);
+      }, 50);
     }
+
+    button.addEventListener("click", () => {
+      const text = input.value.trim();
+      if (!text) return;
+
+      button.disabled = true;
+      output.innerHTML = "…дневник думает…";
+
+      setTimeout(() => {
+        const reply = replies[Math.floor(Math.random() * replies.length)];
+        typeWriter(reply, () => {
+          button.disabled = false;
+        });
+      }, 800);
+    });
   </script>
 
 </body>
