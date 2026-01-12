@@ -3,49 +3,63 @@
 <head>
   <meta charset="UTF-8">
   <title>Дневник Тома Рэддла</title>
-  <style>
-    body {
-      background-color: black;
-      color: #cfcfcf;
-      font-family: "Courier New", monospace;
-      margin: 0;
-      padding: 20px;
-    }
-    h1 {
-      text-align: center;
-    }
-    #output {
-      min-height: 150px;
-      border: 1px solid #444;
-      padding: 10px;
-      margin-bottom: 10px;
-      white-space: pre-wrap;
-    }
-    #input {
-      width: 100%;
-      height: 60px;
-      background-color: black;
-      color: #cfcfcf;
-      border: 1px solid #444;
-      padding: 8px;
-      font-family: inherit;
-      font-size: 16px;
-      resize: none;
-    }
-    button {
-      width: 100%;
-      padding: 12px;
-      background-color: #222;
-      border: none;
-      color: #cfcfcf;
-      font-size: 18px;
-      cursor: pointer;
-      margin-top: 8px;
-    }
-    button:hover {
-      background-color: #333;
-    }
-  </style>
+  
+ <style>
+  body {
+    background: black;
+    color: #cfcfcf;
+    font-family: "Times New Roman", serif;
+    padding: 20px;
+  }
+
+  h1 {
+    text-align: center;
+    letter-spacing: 2px;
+  }
+
+  #output {
+    min-height: 150px;
+    border: 1px solid #444;
+    padding: 12px;
+    margin-bottom: 10px;
+    white-space: pre-wrap;
+    animation: flicker 4s infinite;
+  }
+
+  @keyframes flicker {
+    0% { opacity: 1; }
+    50% { opacity: 0.95; }
+    70% { opacity: 0.9; }
+    100% { opacity: 1; }
+  }
+
+  textarea {
+    width: 100%;
+    height: 60px;
+    background: black;
+    color: #cfcfcf;
+    border: 1px solid #444;
+    padding: 8px;
+    font-family: inherit;
+    font-size: 16px;
+  }
+
+  button {
+    width: 100%;
+    margin-top: 10px;
+    padding: 12px;
+    background: #111;
+    color: #cfcfcf;
+    border: 1px solid #333;
+    cursor: pointer;
+  }
+
+  button:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+</style>
+  
 </head>
 <body>
 
@@ -56,48 +70,31 @@
   <textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
   <button id="askBtn">Спросить</button>
 
-  <script>
-    const replies = [
-      "Я знаю, что ты думаешь…",
-      "Не всё, что ищешь, стоит знать.",
-      "Тьма питается твоим любопытством.",
-      "Продолжай.",
-      "Вглядись внимательнее…",
-      "Я здесь.",
-    ];
+ <script>
+  const output = document.getElementById("output");
+  const input = document.getElementById("input");
+  const button = document.getElementById("askBtn");
 
-    const output = document.getElementById("output");
-    const input = document.getElementById("input");
-    const button = document.getElementById("askBtn");
+  function typeWriter(text, speed = 45) {
+    output.innerHTML = "";
+    let i = 0;
+    button.disabled = true;
 
-    function typeWriter(text, callback) {
-      output.innerHTML = "";
-      let i = 0;
-      const interval = setInterval(() => {
-        output.innerHTML += text.charAt(i);
-        i++;
-        if (i >= text.length) {
-          clearInterval(interval);
-          if (callback) callback();
-        }
-      }, 50);
-    }
+    const interval = setInterval(() => {
+      output.innerHTML += text.charAt(i);
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        button.disabled = false;
+      }
+    }, speed);
+  }
 
-    button.addEventListener("click", () => {
-      const text = input.value.trim();
-      if (!text) return;
-
-      button.disabled = true;
-      output.innerHTML = "…дневник думает…";
-
-      setTimeout(() => {
-        const reply = replies[Math.floor(Math.random() * replies.length)];
-        typeWriter(reply, () => {
-          button.disabled = false;
-        });
-      }, 800);
-    });
-  </script>
+  button.addEventListener("click", () => {
+    if (!input.value.trim()) return;
+    typeWriter("…чернила проявляются…\n\nЯ знаю, что ты ищешь.");
+  });
+</script>
 
 </body>
 </html>
