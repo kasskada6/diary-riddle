@@ -3,8 +3,9 @@
 <head>
   <meta charset="UTF-8">
   <title>Дневник Тома Рэддла</title>
+
   <style>
-    /* Фон дневника */
+    /* ===== ОБЩИЙ ФОН ===== */
     body {
       background-image: url('everytexture.com-stock-paper-texture-00076.jpg');
       background-size: cover;
@@ -21,61 +22,61 @@
       margin-bottom: 30px;
     }
 
-    /* Контейнер рамки + текста */
+    /* ===== КОНТЕЙНЕР РАМКИ ===== */
     #frame-wrapper {
       position: relative;
-      display: inline-block;
       width: 100%;
       max-width: 800px;
-      margin: 0 auto;
+      margin: 0 auto 20px auto;
     }
 
-    /* Рамка кровавая */
+    /* ===== РАМКА (НЕ МЕРЦАЕТ!) ===== */
     .frame-img {
       position: absolute;
-      top: 0; left: 0;
+      inset: 0;
       width: 100%;
       height: 100%;
-      pointer-events: none; /* чтобы рамка не мешала кликам */
+      pointer-events: none;
       z-index: 1;
     }
 
-    /* Блок вывода текста */
+    /* ===== БЛОК ДНЕВНИКА ===== */
     #output {
       position: relative;
       z-index: 2;
-      min-height: 150px;
-      padding: 20px;
-      margin-bottom: 10px;
-      background-color: rgba(245, 241, 231, 0.6); /* лёгкая прозрачность, видно рамку */
+      min-height: 160px;
+      padding: 30px;
+      background-color: rgba(245, 241, 231, 0.65);
       white-space: pre-wrap;
+      box-sizing: border-box;
+    }
 
-      /* Мерцание текста */
-      animation: flicker 0.2s infinite alternate;
+    /* ===== ТОЛЬКО ЧЕРНИЛА МЕРЦАЮТ ===== */
+    .ink {
+      animation: flicker 0.25s infinite alternate;
     }
 
     @keyframes flicker {
-      0% { opacity: 0.8; text-shadow: 0 0 2px #3b2e2a; }
-      25% { opacity: 0.95; text-shadow: 0 0 4px #5a3f2d; }
-      50% { opacity: 1; text-shadow: 0 0 6px #5a3f2d; }
-      75% { opacity: 0.9; text-shadow: 0 0 3px #3b2e2a; }
-      100% { opacity: 0.85; text-shadow: 0 0 2px #3b2e2a; }
+      0%   { opacity: 0.85; text-shadow: 0 0 2px #3b2e2a; }
+      50%  { opacity: 1;    text-shadow: 0 0 5px #5a3f2d; }
+      100% { opacity: 0.9;  text-shadow: 0 0 2px #3b2e2a; }
     }
 
-    /* Поле ввода */
+    /* ===== ПОЛЕ ВВОДА ===== */
     #input {
       width: 100%;
       height: 60px;
-      background-color: black;
+      background-color: #000;
       color: #cfcfcf;
       border: 1px solid #444;
       padding: 8px;
       font-family: inherit;
       font-size: 16px;
       resize: none;
+      box-sizing: border-box;
     }
 
-    /* Кнопка */
+    /* ===== КНОПКА ===== */
     button {
       width: 100%;
       padding: 12px;
@@ -92,14 +93,17 @@
     }
   </style>
 </head>
+
 <body>
 
   <h1>Дневник Тома Рэддла</h1>
 
-  <!-- Контейнер с кровавой рамкой -->
   <div id="frame-wrapper">
     <img src="blood-png-7161.png" class="frame-img">
-    <div id="output">Дневник ждёт твоего вопроса…</div>
+
+    <div id="output">
+      <div class="ink">Дневник ждёт твоего вопроса…</div>
+    </div>
   </div>
 
   <textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
@@ -110,24 +114,24 @@
     const input = document.getElementById("input");
     const button = document.getElementById("askBtn");
 
-    // Простейшие ответы (позже можно подключить ChatGPT)
     const replies = [
-      "Я знаю, что ты думаешь…",
-      "Не всё, что ищешь, стоит знать.",
-      "Тьма питается твоим любопытством.",
+      "Я знаю, что ты ищешь…",
+      "Не всякая правда должна быть произнесена.",
+      "Тьма охотно отвечает тем, кто спрашивает.",
       "Продолжай.",
-      "Вглядись внимательнее…",
-      "Я здесь.",
+      "Ты уже ближе, чем думаешь.",
+      "Я здесь."
     ];
 
-    // Эффект печати по буквам
     function typeWriter(text, speed = 45) {
-      output.innerHTML = "";
+      output.innerHTML = '<div class="ink"></div>';
+      const ink = output.querySelector(".ink");
+
       let i = 0;
       button.disabled = true;
 
       const interval = setInterval(() => {
-        output.innerHTML += text.charAt(i);
+        ink.textContent += text.charAt(i);
         i++;
         if (i >= text.length) {
           clearInterval(interval);
@@ -140,13 +144,15 @@
       const question = input.value.trim();
       if (!question) return;
 
-      output.innerHTML = "…чернила проявляются…";
+      output.innerHTML = '<div class="ink">…чернила проявляются…</div>';
       button.disabled = true;
 
       setTimeout(() => {
         const reply = replies[Math.floor(Math.random() * replies.length)];
         typeWriter(reply);
       }, 800);
+
+      input.value = "";
     });
   </script>
 
