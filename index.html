@@ -21,34 +21,39 @@ h1 {
   margin-bottom: 30px;
 }
 
-/* ===== КОНТЕЙНЕР ===== */
+/* === ОБЩИЙ КОНТЕЙНЕР === */
 #frame-wrapper {
   position: relative;
   max-width: 800px;
   margin: 0 auto 20px auto;
 }
 
-/* ===== ТЁМНАЯ ПОДЛОЖКА ПОД РАМКОЙ ===== */
-#frame-bg {
-  background: #1a0f0f;
-  padding: 20px;
-}
-
-/* ===== РАМКА ===== */
-.frame-img {
+/* === РАМКА (КАК ЕСТЬ, НЕ ТРОГАЕМ) === */
+#frame-wrapper img {
   width: 100%;
   display: block;
 }
 
-/* ===== ОБЛАСТЬ ТЕКСТА ===== */
+/* === ТЕКСТ ВНУТРИ РАМКИ === */
 #output {
   position: absolute;
-  inset: 60px;
-  background-color: #f5f1e7;
-  padding: 20px;
+  top: 12%;
+  left: 12%;
+  width: 76%;
+  height: 76%;
   box-sizing: border-box;
+
+  /* ВАЖНО: прозрачный фон */
+  background: transparent;
+
+  padding: 20px;
+  overflow-y: auto;
+
+  color: #2b1d1a;
+  font-size: 18px;
 }
 
+/* === ВВОД === */
 textarea {
   width: 100%;
   height: 60px;
@@ -57,6 +62,7 @@ textarea {
   border: 1px solid #444;
   padding: 8px;
   font-size: 16px;
+  box-sizing: border-box;
 }
 
 button {
@@ -76,10 +82,7 @@ button {
 <h1>Дневник Тома Рэддла</h1>
 
 <div id="frame-wrapper">
-  <div id="frame-bg">
-    <img src="blood-png-7161.png" class="frame-img">
-  </div>
-
+  <img src="blood-png-7161.png" alt="Рамка">
   <div id="output">
     Дневник ждёт твоего вопроса…
   </div>
@@ -94,16 +97,18 @@ const input = document.getElementById("input");
 
 const replies = [
   "Я знаю, что ты ищешь…",
-  "Ты уже слишком далеко зашёл.",
-  "Продолжай писать.",
-  "Тьма наблюдает.",
+  "Не всё должно быть произнесено.",
+  "Ты уже открыл больше, чем следовало.",
+  "Продолжай.",
   "Я здесь."
 ];
 
 document.getElementById("askBtn").onclick = () => {
   if (!input.value.trim()) return;
+
   output.textContent =
     replies[Math.floor(Math.random() * replies.length)];
+
   input.value = "";
 };
 </script>
