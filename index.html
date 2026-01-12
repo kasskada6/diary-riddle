@@ -22,4 +22,97 @@
       padding: 12px;
       margin-bottom: 10px;
       white-space: pre-wrap;
-      /* Мерцание с эффек*
+      /* Мерцание с эффектом свечения */
+      animation: flicker 0.2s infinite alternate;
+    }
+
+    @keyframes flicker {
+      0% { opacity: 0.8; text-shadow: 0 0 2px #cfcfcf; }
+      50% { opacity: 1; text-shadow: 0 0 6px #fff; }
+      100% { opacity: 0.9; text-shadow: 0 0 2px #cfcfcf; }
+    }
+
+    #input {
+      width: 100%;
+      height: 60px;
+      background-color: black;
+      color: #cfcfcf;
+      border: 1px solid #444;
+      padding: 8px;
+      font-family: inherit;
+      font-size: 16px;
+      resize: none;
+    }
+
+    button {
+      width: 100%;
+      padding: 12px;
+      margin-top: 10px;
+      background-color: #111;
+      color: #cfcfcf;
+      border: 1px solid #333;
+      cursor: pointer;
+    }
+
+    button:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+  </style>
+</head>
+<body>
+
+<h1>Дневник Тома Рэддла</h1>
+
+<div id="output">Дневник ждёт твоего вопроса…</div>
+
+<textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
+<button id="askBtn">Спросить</button>
+
+<script>
+  const output = document.getElementById("output");
+  const input = document.getElementById("input");
+  const button = document.getElementById("askBtn");
+
+  // Простейшие ответы (позже можно подключить ChatGPT)
+  const replies = [
+    "Я знаю, что ты думаешь…",
+    "Не всё, что ищешь, стоит знать.",
+    "Тьма питается твоим любопытством.",
+    "Продолжай.",
+    "Вглядись внимательнее…",
+    "Я здесь.",
+  ];
+
+  // Эффект печати по буквам
+  function typeWriter(text, speed = 45) {
+    output.innerHTML = "";
+    let i = 0;
+    button.disabled = true;
+
+    const interval = setInterval(() => {
+      output.innerHTML += text.charAt(i);
+      i++;
+      if (i >= text.length) {
+        clearInterval(interval);
+        button.disabled = false;
+      }
+    }, speed);
+  }
+
+  button.addEventListener("click", () => {
+    const question = input.value.trim();
+    if (!question) return;
+
+    output.innerHTML = "…чернила проявляются…";
+    button.disabled = true;
+
+    setTimeout(() => {
+      const reply = replies[Math.floor(Math.random() * replies.length)];
+      typeWriter(reply);
+    }, 800);
+  });
+</script>
+
+</body>
+</html>
