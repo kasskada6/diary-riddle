@@ -26,36 +26,27 @@ h1 {
   position: relative;
   max-width: 800px;
   margin: 0 auto 20px auto;
-  isolation: isolate; /* 🔥 ВАЖНО */
 }
 
-/* ===== РАМКА (СТАТИЧНАЯ) ===== */
+/* ===== ТЁМНАЯ ПОДЛОЖКА ПОД РАМКОЙ ===== */
+#frame-bg {
+  background: #1a0f0f;
+  padding: 20px;
+}
+
+/* ===== РАМКА ===== */
 .frame-img {
   width: 100%;
   display: block;
-  position: relative;
-  z-index: 1;
 }
 
 /* ===== ОБЛАСТЬ ТЕКСТА ===== */
 #output {
   position: absolute;
-  inset: 40px;
-  background-color: #f5f1e7; /* ❗️НЕ rgba */
+  inset: 60px;
+  background-color: #f5f1e7;
   padding: 20px;
-  z-index: 2;
   box-sizing: border-box;
-}
-
-/* ===== ЧЕРНИЛА ===== */
-.ink {
-  animation: flicker 0.25s infinite alternate;
-}
-
-@keyframes flicker {
-  0%   { opacity: 0.85; text-shadow: 0 0 1px #3b2e2a; }
-  50%  { opacity: 1;    text-shadow: 0 0 3px #5a3f2d; }
-  100% { opacity: 0.9;  text-shadow: 0 0 1px #3b2e2a; }
 }
 
 textarea {
@@ -66,7 +57,6 @@ textarea {
   border: 1px solid #444;
   padding: 8px;
   font-size: 16px;
-  box-sizing: border-box;
 }
 
 button {
@@ -86,10 +76,12 @@ button {
 <h1>Дневник Тома Рэддла</h1>
 
 <div id="frame-wrapper">
-  <img src="blood-png-7161.png" class="frame-img">
+  <div id="frame-bg">
+    <img src="blood-png-7161.png" class="frame-img">
+  </div>
 
   <div id="output">
-    <div class="ink">Дневник ждёт твоего вопроса…</div>
+    Дневник ждёт твоего вопроса…
   </div>
 </div>
 
@@ -99,34 +91,22 @@ button {
 <script>
 const output = document.getElementById("output");
 const input = document.getElementById("input");
-const button = document.getElementById("askBtn");
 
 const replies = [
   "Я знаю, что ты ищешь…",
-  "Не всякая правда должна быть произнесена.",
   "Ты уже слишком далеко зашёл.",
-  "Тьма слышит тебя.",
-  "Продолжай писать."
+  "Продолжай писать.",
+  "Тьма наблюдает.",
+  "Я здесь."
 ];
 
-function typeWriter(text) {
-  output.innerHTML = '<div class="ink"></div>';
-  const ink = output.querySelector(".ink");
-  let i = 0;
-  button.disabled = true;
-
-  const interval = setInterval(() => {
-    ink.textContent += text.charAt(i);
-    i++;
-    if (i >= text.length) {
-      clearInterval(interval);
-      button.disabled = false;
-    }
-  }, 45);
-}
-
-button.addEventListener("click", () => {
+document.getElementById("askBtn").onclick = () => {
   if (!input.value.trim()) return;
+  output.textContent =
+    replies[Math.floor(Math.random() * replies.length)];
+  input.value = "";
+};
+</script>
 
-  output.innerHTML = '<div class="ink">…чернила проявляются…</div>';
-  setTim
+</body>
+</html>
