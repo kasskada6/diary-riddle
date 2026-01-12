@@ -1,160 +1,132 @@
 <!DOCTYPE html>
 <html lang="ru">
 <head>
-  <meta charset="UTF-8">
-  <title>Дневник Тома Рэддла</title>
+<meta charset="UTF-8">
+<title>Дневник Тома Рэддла</title>
 
-  <style>
-    /* ===== ОБЩИЙ ФОН ===== */
-    body {
-      background-image: url('everytexture.com-stock-paper-texture-00076.jpg');
-      background-size: cover;
-      background-repeat: repeat;
-      background-color: #f5f1e7;
-      color: #3b2e2a;
-      font-family: "Times New Roman", serif;
-      padding: 20px;
-    }
+<style>
+body {
+  background-image: url('everytexture.com-stock-paper-texture-00076.jpg');
+  background-size: cover;
+  background-repeat: repeat;
+  background-color: #f5f1e7;
+  font-family: "Times New Roman", serif;
+  padding: 20px;
+  color: #3b2e2a;
+}
 
-    h1 {
-      text-align: center;
-      letter-spacing: 2px;
-      margin-bottom: 30px;
-    }
+h1 {
+  text-align: center;
+  letter-spacing: 2px;
+  margin-bottom: 30px;
+}
 
-    /* ===== КОНТЕЙНЕР РАМКИ ===== */
-    #frame-wrapper {
-      position: relative;
-      width: 100%;
-      max-width: 800px;
-      margin: 0 auto 20px auto;
-    }
+/* ===== КОНТЕЙНЕР ===== */
+#frame-wrapper {
+  position: relative;
+  max-width: 800px;
+  margin: 0 auto 20px auto;
+  isolation: isolate; /* 🔥 ВАЖНО */
+}
 
-    /* ===== РАМКА (НЕ МЕРЦАЕТ!) ===== */
-    .frame-img {
-      position: absolute;
-      inset: 0;
-      width: 100%;
-      height: 100%;
-      pointer-events: none;
-      z-index: 1;
-    }
+/* ===== РАМКА (СТАТИЧНАЯ) ===== */
+.frame-img {
+  width: 100%;
+  display: block;
+  position: relative;
+  z-index: 1;
+}
 
-    /* ===== БЛОК ДНЕВНИКА ===== */
-    #output {
-      position: relative;
-      z-index: 2;
-      min-height: 160px;
-      padding: 30px;
-      background-color: rgba(245, 241, 231, 0.65);
-      white-space: pre-wrap;
-      box-sizing: border-box;
-    }
+/* ===== ОБЛАСТЬ ТЕКСТА ===== */
+#output {
+  position: absolute;
+  inset: 40px;
+  background-color: #f5f1e7; /* ❗️НЕ rgba */
+  padding: 20px;
+  z-index: 2;
+  box-sizing: border-box;
+}
 
-    /* ===== ТОЛЬКО ЧЕРНИЛА МЕРЦАЮТ ===== */
-    .ink {
-      animation: flicker 0.25s infinite alternate;
-    }
+/* ===== ЧЕРНИЛА ===== */
+.ink {
+  animation: flicker 0.25s infinite alternate;
+}
 
-    @keyframes flicker {
-      0%   { opacity: 0.85; text-shadow: 0 0 2px #3b2e2a; }
-      50%  { opacity: 1;    text-shadow: 0 0 5px #5a3f2d; }
-      100% { opacity: 0.9;  text-shadow: 0 0 2px #3b2e2a; }
-    }
+@keyframes flicker {
+  0%   { opacity: 0.85; text-shadow: 0 0 1px #3b2e2a; }
+  50%  { opacity: 1;    text-shadow: 0 0 3px #5a3f2d; }
+  100% { opacity: 0.9;  text-shadow: 0 0 1px #3b2e2a; }
+}
 
-    /* ===== ПОЛЕ ВВОДА ===== */
-    #input {
-      width: 100%;
-      height: 60px;
-      background-color: #000;
-      color: #cfcfcf;
-      border: 1px solid #444;
-      padding: 8px;
-      font-family: inherit;
-      font-size: 16px;
-      resize: none;
-      box-sizing: border-box;
-    }
+textarea {
+  width: 100%;
+  height: 60px;
+  background: black;
+  color: #cfcfcf;
+  border: 1px solid #444;
+  padding: 8px;
+  font-size: 16px;
+  box-sizing: border-box;
+}
 
-    /* ===== КНОПКА ===== */
-    button {
-      width: 100%;
-      padding: 12px;
-      margin-top: 10px;
-      background-color: #111;
-      color: #cfcfcf;
-      border: 1px solid #333;
-      cursor: pointer;
-    }
-
-    button:disabled {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
-  </style>
+button {
+  width: 100%;
+  margin-top: 10px;
+  padding: 12px;
+  background: #111;
+  color: #cfcfcf;
+  border: 1px solid #333;
+  cursor: pointer;
+}
+</style>
 </head>
 
 <body>
 
-  <h1>Дневник Тома Рэддла</h1>
+<h1>Дневник Тома Рэддла</h1>
 
-  <div id="frame-wrapper">
-    <img src="blood-png-7161.png" class="frame-img">
+<div id="frame-wrapper">
+  <img src="blood-png-7161.png" class="frame-img">
 
-    <div id="output">
-      <div class="ink">Дневник ждёт твоего вопроса…</div>
-    </div>
+  <div id="output">
+    <div class="ink">Дневник ждёт твоего вопроса…</div>
   </div>
+</div>
 
-  <textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
-  <button id="askBtn">Спросить</button>
+<textarea id="input" placeholder="Напиши свой вопрос…"></textarea>
+<button id="askBtn">Спросить</button>
 
-  <script>
-    const output = document.getElementById("output");
-    const input = document.getElementById("input");
-    const button = document.getElementById("askBtn");
+<script>
+const output = document.getElementById("output");
+const input = document.getElementById("input");
+const button = document.getElementById("askBtn");
 
-    const replies = [
-      "Я знаю, что ты ищешь…",
-      "Не всякая правда должна быть произнесена.",
-      "Тьма охотно отвечает тем, кто спрашивает.",
-      "Продолжай.",
-      "Ты уже ближе, чем думаешь.",
-      "Я здесь."
-    ];
+const replies = [
+  "Я знаю, что ты ищешь…",
+  "Не всякая правда должна быть произнесена.",
+  "Ты уже слишком далеко зашёл.",
+  "Тьма слышит тебя.",
+  "Продолжай писать."
+];
 
-    function typeWriter(text, speed = 45) {
-      output.innerHTML = '<div class="ink"></div>';
-      const ink = output.querySelector(".ink");
+function typeWriter(text) {
+  output.innerHTML = '<div class="ink"></div>';
+  const ink = output.querySelector(".ink");
+  let i = 0;
+  button.disabled = true;
 
-      let i = 0;
-      button.disabled = true;
-
-      const interval = setInterval(() => {
-        ink.textContent += text.charAt(i);
-        i++;
-        if (i >= text.length) {
-          clearInterval(interval);
-          button.disabled = false;
-        }
-      }, speed);
+  const interval = setInterval(() => {
+    ink.textContent += text.charAt(i);
+    i++;
+    if (i >= text.length) {
+      clearInterval(interval);
+      button.disabled = false;
     }
+  }, 45);
+}
 
-    button.addEventListener("click", () => {
-      const question = input.value.trim();
-      if (!question) return;
+button.addEventListener("click", () => {
+  if (!input.value.trim()) return;
 
-      output.innerHTML = '<div class="ink">…чернила проявляются…</div>';
-      button.disabled = true;
-
-      setTimeout(() => {
-        const reply = replies[Math.floor(Math.random() * replies.length)];
-        typeWriter(reply);
-      }, 800);
-
-      input.value = "";
-    });
-  </script>
-
-</body>
-</html>
+  output.innerHTML = '<div class="ink">…чернила проявляются…</div>';
+  setTim
